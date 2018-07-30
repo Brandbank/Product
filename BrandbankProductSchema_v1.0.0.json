@@ -1,0 +1,822 @@
+{
+  "title": "Brandbank Product Schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "version": "1.0.0",
+  "definitions": {
+    "itemNameLookup": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nameId": { "type": "integer" },
+          "nameValue": { "type": "string" },
+          "lookupId": { "type": "integer" },
+          "lookupValue": { "type": "string" },
+          "lookupCode": { "type": "string" }
+        },
+        "required": [ "nameId", "nameValue", "lookupId", "lookupValue" ]
+      }
+    },
+    "itemMemo": {
+      "type": "string"
+    },
+    "itemNameText": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nameId": { "type": "integer" },
+          "nameValue": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": [ "nameId", "nameValue", "text" ]
+      }
+    },
+    "itemLongText": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "itemStatement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nameId": { "type": "integer" },
+          "nameValue": { "type": "string" }
+        },
+        "required": [ "nameId", "nameValue" ]
+      }
+    },
+    "itemNutrition": {
+      "type": "object",
+      "properties": {
+        "columnHeaders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rowData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nutrient": { "type": "string" },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [ "nutrient", "values" ]
+          }
+        }
+      },
+      "required": [ "columnHeaders", "rowData" ]
+    },
+    "perTemplate": {
+      "type": "object",
+      "properties": {
+        "qualifierId": { "type": "integer" },
+        "qualifierValue": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    },
+    "itemCalculatedNutrition": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "per100": { "type": "string" },
+            "per100Used": { "type": "string" },
+            "perServing": { "type": "string" }
+          },
+          "required": [ "per100", "per100Used", "perServing" ]
+        },
+        "rowData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nameId": { "type": "integer" },
+              "nameValue": { "type": "string" },
+              "per100": { "$ref": "#/definitions/perTemplate" },
+              "per100Used": { "$ref": "#/definitions/perTemplate" },
+              "perServing": { "$ref": "#/definitions/perTemplate" }
+            },
+            "required": [ "nameId", "nameValue" ]
+          }
+        }
+      }
+    },
+    "itemOfTagsArray": {
+      "type": "object",
+      "properties": {
+        "start": { "type": "integer" },
+        "length": { "type": "integer" },
+        "tagTypeId": { "type": "integer" },
+        "tagTypeName": { "type": "string" }
+      },
+      "required": [ "start", "length", "tagTypeId", "tagTypeName" ]
+    },
+    "itemTaggedMemoTags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/itemOfTagsArray"
+      }
+    },
+    "itemTaggedMemo": {
+      "type": "string"
+    },
+    "itemTaggedLongText": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                { "$ref": "#/definitions/itemOfTagsArray" },
+                {
+                  "properties": { "textIndex": { "type": "integer" } },
+                  "required": [ "textIndex" ]
+                }
+              ]
+            }
+          }
+        },
+        "required": [ "text" ]
+      }
+    },
+    "itemNameTextLookup": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nameId": { "type": "integer" },
+          "nameValue": { "type": "string" },
+          "lookupId": { "type": "integer" },
+          "lookupValue": { "type": "string" },
+          "lookupCode": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": [ "nameId", "nameValue", "lookupId", "lookupValue", "text" ]
+      }
+    },
+    "itemStructuredNutrition": {
+      "type": "object",
+      "properties": {
+        "groupDefinitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" },
+              "amountHeader": { "type": "string" },
+              "referenceIntakeHeaders": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "totalAmount": { "type": "string" },
+              "totalAmountUnit": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "abbreviation": { "type": "string" }
+                },
+                "required": [ "id", "name", "abbreviation" ]
+              }
+            },
+            "required": [ "id", "name", "amountHeader", "referenceIntakeHeaders" ]
+          }
+        },
+        "nutrients": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" },
+              "unit": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "abbreviation": { "type": "string" }
+                },
+                "required": [ "id", "name", "abbreviation" ]
+              },
+              "groupValues": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": [ "object", "null" ],
+                      "properties": {
+                        "value": { "type": "string" },
+                        "qualifierId": { "type": "integer" },
+                        "qualifierName": { "type": "string" }
+                      }
+                    },
+                    "referenceIntakeValues": {
+                      "type": "array",
+                      "items": {
+                        "type": [ "object", "null" ],
+                        "properties": {
+                          "value": { "type": "string" },
+                          "qualifierId": { "type": "integer" },
+                          "qualifierName": { "type": "string" }
+                        }
+                      }
+                    }
+                  },
+                  "required": [ "amount", "referenceIntakeValues" ]
+                }
+              }
+            },
+            "required": [ "id", "name" ]
+          }
+        }
+      },
+      "required": [ "groupDefinitions" ]
+    },
+    "itemFrontOfPackGDA": {
+      "type": "object",
+      "properties": {
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nameId": { "type": "integer" },
+              "nameValue": { "type": "string" },
+              "headers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "footers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "nutrients": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "value": { "type": "string" },
+                    "ratingId": { "type": "integer" },
+                    "ratingValue": { "type": "string" },
+                    "quantities": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "unitId": { "type": "integer" },
+                          "unitValue": { "type": "string" },
+                          "value": { "type": "string" }
+                        },
+                        "required": [ "value" ]
+                      }
+                    },
+                    "percentage": {
+                      "type": "object",
+                      "properties": {
+                        "qualifierId": { "type": "integer" },
+                        "qualifierValue": { "type": "string" },
+                        "value": { "type": "string" }
+                      },
+                      "required": [ "value" ]
+                    }
+                  },
+                  "required": [ "id", "value" ]
+                }
+              }
+            },
+            "required": [ "nameId", "nameValue", "nutrients" ]
+          }
+        }
+      },
+      "required": [ "references" ]
+    },
+    "groupingSets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "LanguageId": { "type": "integer" },
+                  "Value": { "type": "string" }
+                },
+                "required": [ "LanguageId", "Value" ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "thirdPartyLogos": { "$ref": "#/definitions/itemStatement" },
+              "lifestyle": { "$ref": "#/definitions/itemStatement" },
+              "otherInformation": { "$ref": "#/definitions/itemMemo" },
+              "allergyAdvice": { "$ref": "#/definitions/itemNameLookup" },
+              "additives": { "$ref": "#/definitions/itemNameLookup" },
+              "nappySize": { "$ref": "#/definitions/itemNameText" },
+              "cookingGuidelines": { "$ref": "#/definitions/itemNameTextLookup" },
+              "nutStatement": { "$ref": "#/definitions/itemNameText" },
+              "storageAndUsageStatements": { "$ref": "#/definitions/itemStatement" },
+              "recyclingInfo": { "$ref": "#/definitions/itemNameLookup" },
+              "allergyOtherText": { "$ref": "#/definitions/itemLongText" },
+              "additivesOtherText": { "$ref": "#/definitions/itemLongText" },
+              "lifestyleOtherText": { "$ref": "#/definitions/itemLongText" },
+              "manufacturersAddress": { "$ref": "#/definitions/itemMemo" },
+              "dimension": { "$ref": "#/definitions/itemNameText" },
+              "preparationAndUsage": { "$ref": "#/definitions/itemMemo" },
+              "storage": { "$ref": "#/definitions/itemMemo" },
+              "furtherDescription": { "$ref": "#/definitions/itemMemo" },
+              "country": { "$ref": "#/definitions/itemNameLookup" },
+              "lowerAgeLimit": { "$ref": "#/definitions/itemNameTextLookup" },
+              "brand": { "$ref": "#/definitions/itemLongText" },
+              "returnTo": { "$ref": "#/definitions/itemMemo" },
+              "storageType": { "$ref": "#/definitions/itemNameLookup" },
+              "storageConditions": { "$ref": "#/definitions/itemNameText" },
+              "packType": { "$ref": "#/definitions/itemNameLookup" },
+              "promotionalPackType": { "$ref": "#/definitions/itemStatement" },
+              "pharmacy": { "$ref": "#/definitions/itemNameText" },
+              "features": { "$ref": "#/definitions/itemLongText" },
+              "standardisedBrand": { "$ref": "#/definitions/itemNameLookup" },
+              "weight": { "$ref": "#/definitions/itemNameText" },
+              "productMarketing": { "$ref": "#/definitions/itemMemo" },
+              "brandMarketing": { "$ref": "#/definitions/itemMemo" },
+              "manufacturerMarketing": { "$ref": "#/definitions/itemMemo" },
+              "periodicalFrequency": { "$ref": "#/definitions/itemNameLookup" },
+              "periodicalSalePeriod": { "$ref": "#/definitions/itemNameText" },
+              "boxContents": { "$ref": "#/definitions/itemLongText" },
+              "electrical": { "$ref": "#/definitions/itemNameTextLookup" },
+              "productDimensions": { "$ref": "#/definitions/itemNameTextLookup" },
+              "productSize": { "$ref": "#/definitions/itemNameLookup" },
+              "colour": { "$ref": "#/definitions/itemStatement" },
+              "finish": { "$ref": "#/definitions/itemStatement" },
+              "material": { "$ref": "#/definitions/itemNameTextLookup" },
+              "waterFilter": { "$ref": "#/definitions/itemNameLookup" },
+              "style": { "$ref": "#/definitions/itemNameLookup" },
+              "standardisedFeatureText": { "$ref": "#/definitions/itemNameText" },
+              "featureStatements": { "$ref": "#/definitions/itemStatement" },
+              "generalStatements": { "$ref": "#/definitions/itemStatement" },
+              "safetyWarning": { "$ref": "#/definitions/itemMemo" },
+              "rangeInformation": { "$ref": "#/definitions/itemMemo" },
+              "featureLookups": { "$ref": "#/definitions/itemNameLookup" },
+              "identification": { "$ref": "#/definitions/itemNameText" },
+              "support": { "$ref": "#/definitions/itemNameText" },
+              "prizesAndAwardsWon": { "$ref": "#/definitions/itemLongText" },
+              "batteryType": { "$ref": "#/definitions/itemNameTextLookup" },
+              "electicalFeatures": { "$ref": "#/definitions/itemNameLookup" },
+              "areaOfUse": { "$ref": "#/definitions/itemStatement" },
+              "colourText": { "$ref": "#/definitions/itemLongText" },
+              "productType": { "$ref": "#/definitions/itemStatement" },
+              "skinType": { "$ref": "#/definitions/itemStatement" },
+              "multilingualDescriptions": { "$ref": "#/definitions/itemNameText" },
+              "productLanguage": { "$ref": "#/definitions/itemNameLookup" },
+              "numberOfUnits": { "$ref": "#/definitions/itemNameText" },
+              "unitType": { "$ref": "#/definitions/itemLongText" },
+              "numericSize": { "$ref": "#/definitions/itemNameText" },
+              "unitSpecific": { "$ref": "#/definitions/itemNameLookup" },
+              "packSize": { "$ref": "#/definitions/itemLongText" },
+              "unitFreeText": { "$ref": "#/definitions/itemLongText" },
+              "averageMeasure": { "$ref": "#/definitions/itemStatement" },
+              "alcoholType": { "$ref": "#/definitions/itemNameLookup" },
+              "generalAlcoholData": { "$ref": "#/definitions/itemNameText" },
+              "regionOfOrigin": { "$ref": "#/definitions/itemNameLookup" },
+              "wineAlcoholData": { "$ref": "#/definitions/itemNameText" },
+              "wineColour": { "$ref": "#/definitions/itemNameLookup" },
+              "wineEffervescence": { "$ref": "#/definitions/itemStatement" },
+              "definedArea": { "$ref": "#/definitions/itemNameLookup" },
+              "typeOfClosure": { "$ref": "#/definitions/itemNameLookup" },
+              "recommendedStorage": { "$ref": "#/definitions/itemNameLookup" },
+              "recommendedStorageEndText": { "$ref": "#/definitions/itemNameLookup" },
+              "languagesOnPack": { "$ref": "#/definitions/itemStatement" },
+              "ingredients": { "$ref": "#/definitions/itemLongText" },
+              "nutrition": { "$ref": "#/definitions/itemNutrition" },
+              "calculatedNutrition": { "$ref": "#/definitions/itemCalculatedNutrition" },
+              "barcodeVerificationData": { "$ref": "#/definitions/itemNameText" },
+              "aestheticsText": { "$ref": "#/definitions/itemNameText" },
+              "dimensionsOtherText": { "$ref": "#/definitions/itemLongText" },
+              "type": { "$ref": "#/definitions/itemNameLookup" },
+              "standardisedFeatures": { "$ref": "#/definitions/itemNameText" },
+              "electricalStatements": { "$ref": "#/definitions/itemStatement" },
+              "featureTextLookups": { "$ref": "#/definitions/itemNameTextLookup" },
+              "ageRange": { "$ref": "#/definitions/itemNameText" },
+              "weightLimit": { "$ref": "#/definitions/itemNameText" },
+              "featuresOtherText": { "$ref": "#/definitions/itemLongText" },
+              "manufacturerBrand": { "$ref": "#/definitions/itemNameLookup" },
+              "enhancedMarketing": { "$ref": "#/definitions/itemMemo" },
+              "enhancedFeatures": { "$ref": "#/definitions/itemLongText" },
+              "specificationText": { "$ref": "#/definitions/itemNameText" },
+              "specificationStatements": { "$ref": "#/definitions/itemStatement" },
+              "specificationLookups": { "$ref": "#/definitions/itemNameLookup" },
+              "usageStatements": { "$ref": "#/definitions/itemStatement" },
+              "safetyStatements": { "$ref": "#/definitions/itemStatement" },
+              "safetyText": { "$ref": "#/definitions/itemNameText" },
+              "aestheticsStatements": { "$ref": "#/definitions/itemStatement" },
+              "specificationTextLookup": { "$ref": "#/definitions/itemNameTextLookup" },
+              "usageText": { "$ref": "#/definitions/itemNameText" },
+              "assemblyType": { "$ref": "#/definitions/itemNameTextLookup" },
+              "assemblyText": { "$ref": "#/definitions/itemNameText" },
+              "otherAssemblyInfo": { "$ref": "#/definitions/itemMemo" },
+              "nappyIndexedSize": { "$ref": "#/definitions/itemNameLookup" },
+              "size": { "$ref": "#/definitions/itemNameText" },
+              "legalDisclaimers": { "$ref": "#/definitions/itemLongText" },
+              "warnings": { "$ref": "#/definitions/itemLongText" },
+              "usageLookups": { "$ref": "#/definitions/itemNameLookup" },
+              "shelfReadyPack": { "$ref": "#/definitions/itemNameText" },
+              "breakPack": { "$ref": "#/definitions/itemNameText" },
+              "case": { "$ref": "#/definitions/itemNameText" },
+              "nesting": { "$ref": "#/definitions/itemNameText" },
+              "enhancedProductMarketing": { "$ref": "#/definitions/itemMemo" },
+              "enhancedBrandMarketing": { "$ref": "#/definitions/itemMemo" },
+              "enhancedManufacturerMarketing": { "$ref": "#/definitions/itemMemo" },
+              "enhancedOtherMarketing": { "$ref": "#/definitions/itemMemo" },
+              "ageRecommendation": { "$ref": "#/definitions/itemNameLookup" },
+              "electricalFeatures": { "$ref": "#/definitions/itemNameLookup" },
+              "warningsSafetyInstructions": { "$ref": "#/definitions/itemMemo" },
+              "careInstructions": { "$ref": "#/definitions/itemMemo" },
+              "upperAgeLimit": { "$ref": "#/definitions/itemNameTextLookup" },
+              "catalogueNumber": { "$ref": "#/definitions/itemNameText" },
+              "assemblyLookups": { "$ref": "#/definitions/itemNameLookup" },
+              "unitMerchandising": { "$ref": "#/definitions/itemNameText" },
+              "pallet": { "$ref": "#/definitions/itemNameText" },
+              "lampBulbSpecifications": { "$ref": "#/definitions/itemNameText" },
+              "newProductDevelopment": { "$ref": "#/definitions/itemNameLookup" },
+              "alcoholByVolumeOtherText": { "$ref": "#/definitions/itemLongText" },
+              "alcoholUnitsOtherText": { "$ref": "#/definitions/itemLongText" },
+              "briefMarketingDescription": { "$ref": "#/definitions/itemMemo" },
+              "enhancedUsage": { "$ref": "#/definitions/itemMemo" },
+              "recipes": { "$ref": "#/definitions/itemMemo" },
+              "palletDetails": { "$ref": "#/definitions/itemNameLookup" },
+              "placeOfBirth": { "$ref": "#/definitions/itemLongText" },
+              "placeOfRearing": { "$ref": "#/definitions/itemLongText" },
+              "placeOfSlaughter": { "$ref": "#/definitions/itemLongText" },
+              "origin": { "$ref": "#/definitions/itemNameText" },
+              "thirdPartyLogoOtherText": { "$ref": "#/definitions/itemLongText" },
+              "recyclingScheme": { "$ref": "#/definitions/itemStatement" },
+              "recyclingOtherText": { "$ref": "#/definitions/itemLongText" },
+              "importerAddress": { "$ref": "#/definitions/itemMemo" },
+              "distributorAddress": { "$ref": "#/definitions/itemMemo" },
+              "telephoneHelpline": { "$ref": "#/definitions/itemLongText" },
+              "emailHelpline": { "$ref": "#/definitions/itemLongText" },
+              "webAddress": { "$ref": "#/definitions/itemLongText" },
+              "nutritionalClaims": { "$ref": "#/definitions/itemLongText" },
+              "healthClaims": { "$ref": "#/definitions/itemLongText" },
+              "subBrand": { "$ref": "#/definitions/itemNameText" },
+              "regulatedProductName": { "$ref": "#/definitions/itemMemo" },
+              "calculatedNutritionOrdering": { "$ref": "#/definitions/itemNameLookup" },
+              "servings": { "$ref": "#/definitions/itemNameText" },
+              "glns": { "$ref": "#/definitions/itemNameText" },
+              "manufacturerName": { "$ref": "#/definitions/itemLongText" },
+              "gS1Category": { "$ref": "#/definitions/itemNameText" },
+              "nappySizeOtherText": { "$ref": "#/definitions/itemMemo" },
+              "safebrandCategory": { "$ref": "#/definitions/itemNameLookup" },
+              "safebrandNetContent": { "$ref": "#/definitions/itemNameTextLookup" },
+              "notificationNumber": { "$ref": "#/definitions/itemNameText" },
+              "alternativeDescription": { "$ref": "#/definitions/itemNameText" },
+              "shelfLife": { "$ref": "#/definitions/itemNameTextLookup" },
+              "catchWeightMeasurements": { "$ref": "#/definitions/itemNameTextLookup" },
+              "allergenTagFormat": { "$ref": "#/definitions/itemStatement" },
+              "allergenTagText": { "$ref": "#/definitions/itemMemo" },
+              "taggableInformation": { "$ref": "#/definitions/itemTaggedMemo" },
+              "taggableIngredients": { "$ref": "#/definitions/itemTaggedLongText" },
+              "frontOfPackNutrition": { "$ref": "#/definitions/itemFrontOfPackGDA" },
+              "cosmeticStatements": { "$ref": "#/definitions/itemStatement" },
+              "productComposition": { "$ref": "#/definitions/itemNameLookup" },
+              "petType": { "$ref": "#/definitions/itemNameLookup" },
+              "additionalCategory": { "$ref": "#/definitions/itemNameLookup" },
+              "descriptionBreakdown": { "$ref": "#/definitions/itemNameText" },
+              "sizeVariant": { "$ref": "#/definitions/itemStatement" },
+              "latinNameOfFish": { "$ref": "#/definitions/itemLongText" },
+              "qualityStatements": { "$ref": "#/definitions/itemStatement" },
+              "freeTextAverageSize": { "$ref": "#/definitions/itemLongText" },
+              "class": { "$ref": "#/definitions/itemNameLookup" },
+              "farmingMethod": { "$ref": "#/definitions/itemLongText" },
+              "usageCount": { "$ref": "#/definitions/itemNameTextLookup" },
+              "companyName": { "$ref": "#/definitions/itemLongText" },
+              "companyAddress": { "$ref": "#/definitions/itemMemo" },
+              "usageOtherText": { "$ref": "#/definitions/itemLongText" },
+              "bulbSpecifications": { "$ref": "#/definitions/itemNameLookup" },
+              "trademarkInformation": { "$ref": "#/definitions/itemMemo" },
+              "taggableAllergyText": { "$ref": "#/definitions/itemTaggedMemo" },
+              "allergyText": { "$ref": "#/definitions/itemMemo" },
+              "quantitativeIngredientDeclaration": { "$ref": "#/definitions/itemLongText" },
+              "cLPRegulation": { "$ref": "#/definitions/itemNameLookup" },
+              "aISEWarnings": { "$ref": "#/definitions/itemStatement" },
+              "faxNumber": { "$ref": "#/definitions/itemLongText" },
+              "eggSize": { "$ref": "#/definitions/itemNameLookup" },
+              "durabilityAfterOpening": { "$ref": "#/definitions/itemNameTextLookup" },
+              "stiftungWarentest": { "$ref": "#/definitions/itemMemo" },
+              "warranty": { "$ref": "#/definitions/itemMemo" },
+              "creativeContent": { "$ref": "#/definitions/itemNameText" },
+              "sEOMetatag": { "$ref": "#/definitions/itemLongText" },
+              "sEOPageTitle": { "$ref": "#/definitions/itemMemo" },
+              "sEOPageDescription": { "$ref": "#/definitions/itemMemo" },
+              "shape": { "$ref": "#/definitions/itemNameLookup" },
+              "textileInformation": { "$ref": "#/definitions/itemNameText" },
+              "technicalSpecifications": { "$ref": "#/definitions/itemMemo" },
+              "generalProductType": { "$ref": "#/definitions/itemNameLookup" },
+              "design": { "$ref": "#/definitions/itemNameLookup" },
+              "materialFreeText": { "$ref": "#/definitions/itemLongText" },
+              "regionalName": { "$ref": "#/definitions/itemLongText" },
+              "price": { "$ref": "#/definitions/itemNameTextLookup" },
+              "foodLifeInformation": { "$ref": "#/definitions/itemNameText" },
+              "pickingAndPackaging": { "$ref": "#/definitions/itemMemo" },
+              "disclaimer": { "$ref": "#/definitions/itemMemo" },
+              "otherEans": { "$ref": "#/definitions/itemLongText" },
+              "newArrivals": { "$ref": "#/definitions/itemNameLookup" },
+              "sEOTags": { "$ref": "#/definitions/itemNameText" },
+              "aboutProductDescription": { "$ref": "#/definitions/itemMemo" },
+              "brandDescription": { "$ref": "#/definitions/itemMemo" },
+              "designDescription": { "$ref": "#/definitions/itemMemo" },
+              "lookPatternDescription": { "$ref": "#/definitions/itemMemo" },
+              "materialDescription": { "$ref": "#/definitions/itemMemo" },
+              "technicalDetailsDescription": { "$ref": "#/definitions/itemMemo" },
+              "technologyDescription": { "$ref": "#/definitions/itemMemo" },
+              "utilityDescription": { "$ref": "#/definitions/itemMemo" },
+              "washCareDescription": { "$ref": "#/definitions/itemMemo" },
+              "ingredientDescription": { "$ref": "#/definitions/itemMemo" },
+              "benefitDescription": { "$ref": "#/definitions/itemMemo" },
+              "colourCodes": { "$ref": "#/definitions/itemNameText" },
+              "complimentaryProducts": { "$ref": "#/definitions/itemLongText" },
+              "instructionalVideoContent": { "$ref": "#/definitions/itemLongText" },
+              "addedFeaturesAndBenefits": { "$ref": "#/definitions/itemMemo" },
+              "preferredCustomerFriendlyProductDescription": { "$ref": "#/definitions/itemMemo" },
+              "additionalAlcoholData": { "$ref": "#/definitions/itemNameTextLookup" },
+              "fruitAndVegetableVariety": { "$ref": "#/definitions/itemLongText" },
+              "wineStatements": { "$ref": "#/definitions/itemStatement" },
+              "lightFeatures": { "$ref": "#/definitions/itemNameText" },
+              "socialMedia": { "$ref": "#/definitions/itemLongText" },
+              "europeanCandleAssociationWarnings": { "$ref": "#/definitions/itemStatement" },
+              "promotionalInformation": { "$ref": "#/definitions/itemMemo" },
+              "suppliedDimension": { "$ref": "#/definitions/itemNameText" },
+              "suppliedWeight": { "$ref": "#/definitions/itemNameText" },
+              "suppliedShelfReadyPack": { "$ref": "#/definitions/itemNameText" },
+              "suppliedBreakPack": { "$ref": "#/definitions/itemNameText" },
+              "suppliedCase": { "$ref": "#/definitions/itemNameText" },
+              "suppliedUnitMerchandising": { "$ref": "#/definitions/itemNameText" },
+              "suppliedPallet": { "$ref": "#/definitions/itemNameText" },
+              "suppliedNewProductDevelopment": { "$ref": "#/definitions/itemNameLookup" },
+              "structuredNutritionUS": { "$ref": "#/definitions/itemStructuredNutrition" },
+              "structuredNutritionEU": { "$ref": "#/definitions/itemStructuredNutrition" },
+              "consumerChemicalsCanada": { "$ref": "#/definitions/itemNameLookup" },
+              "uSProductSpecifications": { "$ref": "#/definitions/itemNameText" },
+              "nutritionOtherText": { "$ref": "#/definitions/itemMemo" },
+              "fabricMaterial": { "$ref": "#/definitions/itemNameText" },
+              "cleaningCareInstructions": { "$ref": "#/definitions/itemMemo" },
+              "recommendedUses": { "$ref": "#/definitions/itemMemo" },
+              "postCode": { "$ref": "#/definitions/itemLongText" },
+              "taxDetails": { "$ref": "#/definitions/itemNameLookup" },
+              "wholesaleLaunchDetails": { "$ref": "#/definitions/itemNameText" },
+              "wholesaleProductSpecifications": { "$ref": "#/definitions/itemStatement" },
+              "activeIngredients": { "$ref": "#/definitions/itemLongText" },
+              "animalSpecifications": { "$ref": "#/definitions/itemNameText" },
+              "dosage": { "$ref": "#/definitions/itemMemo" },
+              "safeHandlingInstructions": { "$ref": "#/definitions/itemMemo" },
+              "stopUseIndications": { "$ref": "#/definitions/itemMemo" },
+              "feedingInstructions": { "$ref": "#/definitions/itemMemo" },
+              "structuredNutritionAUS": { "$ref": "#/definitions/itemStructuredNutrition" },
+              "australiaMadeLogo": { "$ref": "#/definitions/itemNameTextLookup" },
+              "australiaMadeLogoOtherText": { "$ref": "#/definitions/itemMemo" },
+              "globalProductClassificationGPC": { "$ref": "#/definitions/itemNameText" },
+              "healthStarRatingNumber": { "$ref": "#/definitions/itemNameLookup" },
+              "healthStarRatingOtherText": { "$ref": "#/definitions/itemMemo" },
+              "standardDrinksOtherText": { "$ref": "#/definitions/itemLongText" },
+              "foodLabelVersion": { "$ref": "#/definitions/itemNameLookup" },
+              "gS1SuppliedDimensions": { "$ref": "#/definitions/itemNameTextLookup" },
+              "normalizedProductDescription": { "$ref": "#/definitions/itemLongText" },
+              "preparationAndCookingSuggestions": { "$ref": "#/definitions/itemMemo" },
+              "productClaims": { "$ref": "#/definitions/itemMemo" },
+              "recordInfo": { "$ref": "#/definitions/itemNameText" },
+              "structuredNutritionCA": { "$ref": "#/definitions/itemStructuredNutrition" },
+              "netContent": { "$ref": "#/definitions/itemNameText" },
+              "packPromotionDetails": { "$ref": "#/definitions/itemNameText" },
+              "newLineType": { "$ref": "#/definitions/itemNameLookup" },
+              "pricePerUnit": { "$ref": "#/definitions/itemNameLookup" },
+              "caseType": { "$ref": "#/definitions/itemNameLookup" },
+              "tescoCategory": { "$ref": "#/definitions/itemNameLookup" },
+              "wholesalePriceDetails": { "$ref": "#/definitions/itemNameText" },
+              "supplierDeclarations": { "$ref": "#/definitions/itemStatement" },
+              "alternativeNumericSize": { "$ref": "#/definitions/itemNameText" },
+              "alternativeUnitSpecific": { "$ref": "#/definitions/itemNameLookup" },
+              "innerGtins": { "$ref": "#/definitions/itemLongText" },
+              "referenceIntakeStatement": { "$ref": "#/definitions/itemNameText" },
+              "compulsoryAdditiveInformation": { "$ref": "#/definitions/itemMemo" },
+              "countryOfOriginLabellingAUS": { "$ref": "#/definitions/itemNameText" },
+              "healthStarRating": { "$ref": "#/definitions/itemNameLookup" },
+              "healthStarRatingFooter": { "$ref": "#/definitions/itemLongText" },
+              "suppliedAlcoholInfo": { "$ref": "#/definitions/itemNameText" },
+              "pernodRicardPackType": { "$ref": "#/definitions/itemNameLookup" },
+              "pernodRicardCategory": { "$ref": "#/definitions/itemNameLookup" },
+              "gS1Smartsearch": { "$ref": "#/definitions/itemMemo" },
+              "nielsenImageDetails": { "$ref": "#/definitions/itemMemo" },
+              "fishCatchArea": { "$ref": "#/definitions/itemStatement" },
+              "nutriScore": { "$ref": "#/definitions/itemNameLookup" },
+              "mediumMarketingDescription": { "$ref": "#/definitions/itemMemo" },
+              "legalProductStatus": { "$ref": "#/definitions/itemNameText" },
+              "indicationOfUse": { "$ref": "#/definitions/itemMemo" },
+              "salesRestriction": { "$ref": "#/definitions/itemMemo" },
+              "taggableIngredientsPharma": { "$ref": "#/definitions/itemTaggedLongText" },
+              "taggableOtherIngredients": { "$ref": "#/definitions/itemTaggedLongText" },
+              "pRNumber": { "$ref": "#/definitions/itemLongText" },
+              "ingredientConcentration": { "$ref": "#/definitions/itemLongText" },
+              "ingredientsPharma": { "$ref": "#/definitions/itemLongText" },
+              "otherIngredients": { "$ref": "#/definitions/itemLongText" },
+              "dosageReccomendation": { "$ref": "#/definitions/itemMemo" },
+              "drugSideEffectsAndWarnings": { "$ref": "#/definitions/itemMemo" },
+              "dosageFormType": { "$ref": "#/definitions/itemNameText" },
+              "nonFoodNutrition": { "$ref": "#/definitions/itemMemo" },
+              "nonFoodIngredientStatement": { "$ref": "#/definitions/itemTaggedLongText" },
+              "pharmacyCategory": { "$ref": "#/definitions/itemNameLookup" },
+              "consumerSalesConditionCode": { "$ref": "#/definitions/itemNameLookup" },
+              "regulatoryPermitIdentification": { "$ref": "#/definitions/itemNameText" },
+              "additionalTradeItemIdentification": { "$ref": "#/definitions/itemNameTextLookup" },
+              "uniformResourceIdentifier": { "$ref": "#/definitions/itemMemo" },
+              "servingSizeDescription": { "$ref": "#/definitions/itemNameText" },
+              "tags": { "$ref": "#/definitions/itemTaggedMemoTags" }
+            }
+
+          }
+        }
+      }
+    },
+    "product": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "gtin": { "type": "string" },
+        "gln": { "type": "string" },
+        "brandbankCode": { "type": "string" },
+        "pvid": { "type": "string" },
+        "subscriber": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "integer" },
+            "code": { "type": "string" }
+          }
+        },
+        "versionDateTime": { "type": "string" },
+        "targetMarkets": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "updateType": { "type": [ "string", "null" ] },
+        "eu1169Compliance": { "type": "string" },
+        "defaultLanguage": { "type": "string" },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": { "type": "integer" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+
+            }
+          }
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "shotTypeId": { "type": "integer" },
+              "shotType": { "type": "string" },
+              "mimeType": { "type": "string" },
+              "thumbprint": { "type": "string" },
+              "fileName": { "type": "string" },
+              "url": {
+                "type": "object",
+                "properties": {
+                  "href": { "type": "string" },
+                  "expiryDateTime": { "type": [ "string", "null" ] }
+                }
+              },
+              "measurementUnit": { "type": "string" },
+              "width": { "type": "integer" },
+              "height": { "type": "integer" }
+            },
+            "required": [ "shotTypeId", "shotType", "mimeType" ]
+          }
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "documentTypeId": { "type": "integer" },
+              "documentType": { "type": "string" },
+              "mimeType": { "type": "string" },
+              "sizeInBytes": { "type": "string" },
+              "fileName": { "type": "string" },
+              "url": {
+                "type": "object",
+                "properties": {
+                  "href": { "type": "string" },
+                  "expiryDateTime": { "type": [ "string", "null" ] }
+                }
+              }
+            }
+          }
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "placeholderName": { "type": "string" },
+              "mimeType": { "type": "string" },
+              "filename": { "type": "string" },
+              "fileExtension": { "type": "string" },
+              "sizeInBytes": { "type": "string" },
+              "url": {
+                "type": "object",
+                "properties": {
+                  "href": { "type": "string" },
+                  "expiryDateTime": { "type": [ "string", "null" ] }
+                }
+              },
+              "thumbprint": { "type": "string" }
+            }
+          }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "language": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" },
+              "groupingSets": { "$ref": "#/definitions/groupingSets" },
+              "parts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "partNo": { "type": "integer" },
+                    "description": { "type": "string" },
+                    "groupingSets": { "$ref": "#/definitions/groupingSets" }
+                  },
+                  "required": [ "partNo", "description" ]
+                }
+              }
+            },
+            "required": [ "language", "code", "description", "groupingSets" ]
+          }
+        },
+        "extendedData": { "type": "object" }
+      },
+      "required": [
+        "description",
+        "subscriber",
+        "versionDateTime",
+        "updateType",
+        "eu1169Compliance",
+        "defaultLanguage",
+        "images",
+        "objects",
+        "assets",
+        "languages"
+      ]
+    }
+  },
+  "anyOf": [
+    { "$ref": "#/definitions/product" },
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/product"
+      }
+    }
+  ]
+}
