@@ -11,3 +11,4 @@ X.Y.Z  |  Major.Minor.Patch
 
 # Versions
 1.0.0 - Initial Version
+1.0.1 - Changed nonFoodIngredientStatement base type to long text
