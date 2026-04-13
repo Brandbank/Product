@@ -2,13 +2,14 @@
 
 Versioning stratergy based on https://semver.org/
 
-X.Y.Z  |  Major.Minor.Patch
+X.Y.Z | Major.Minor.Patch
 
 - Major : Breaking change - property moved/removed or its type changed.
 - Minor : Non breaking change - property added.
 - Patch : Backwards compatible bug fixes
 
-
 # Versions
+
 1.0.0 - Initial Version
 1.0.1 - Changed nonFoodIngredientStatement base type to long text
+1.0.2 - Add fileCreationDatetime property
